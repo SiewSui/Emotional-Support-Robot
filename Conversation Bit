@@ -1,0 +1,52 @@
+import speech_recognition as sr
+import pyaudio
+import pyttsx3
+
+import os
+from groq import Groq
+engine = pyttsx3.init()
+
+# Set your API key
+GROQ_API_KEY = "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"
+
+# Initialize the Groq client with the API key
+client = Groq(api_key=GROQ_API_KEY)
+
+def listen():
+    listener = sr.Recognizer()
+    with sr.Microphone() as AudioSource:
+        listener.adjust_for_ambient_noise(AudioSource)
+        speak(message="Hi there dear user, how may I asisst you today?")
+        user_speech = listener.listen(AudioSource)
+
+        try:
+            prompt = listener.recognize_google(user_speech)
+            understand(prompt)
+        
+        except:
+            speak(message="I'm sorry, I didn't quite get that, mind if you run that by me again?")
+
+def understand(prompt):
+        # Create a chat completion
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+        model="llama3-8b-8192",
+    )
+    speak(message = chat_completion.choices[0].message.content)
+
+def speak(message):
+    engine.say(message)
+    engine.runAndWait()
+
+while True:
+    listen()
+
+    
+# TODO - Remember context (Store user prompts and answers)
+# Understand emotions through audio cue.
+# Go towards emotion support.
