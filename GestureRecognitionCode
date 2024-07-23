@@ -1,0 +1,47 @@
+import numpy as np
+import cv2
+
+cap = cv2.VideoCapture(0)  # 0 for default camera, provide video file path otherwise
+
+if not cap.isOpened():
+    print("Error opening video capture")
+    exit()
+
+    
+# Pre-trained face detection cascade classifier (Haar Cascade)
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# Replace with a more robust face detector if needed
+
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    if not ret:
+        print("Error reading frame")
+        break
+
+    # Convert to grayscale (may be necessary for face detection)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Detect faces
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+
+    # Analyze head gesture based on face location (optional head pose estimation)
+    for (x, y, w, h) in faces:
+        # Draw a rectangle around the face
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+        # Implement gesture analysis logic here (based on face position)
+        # ...
+
+    # Display the resulting frame
+    cv2.imshow('frame', frame)
+
+    # Quit with 'q' key
+    if cv2.waitKey(1) == ord('q'):
+        break
+
+# Release capture and close all windows
+cap.release()
+cv2.destroyAllWindows()
