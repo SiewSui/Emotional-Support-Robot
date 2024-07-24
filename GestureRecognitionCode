@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('/home/sm/Desktop/nodcontrol.avi', fourcc, 20.0, (640, 480))
+out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
 
 # Distance function
 def distance(x, y):
@@ -17,7 +17,7 @@ lk_params = dict(winSize=(15, 15), maxLevel=2,
                  criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
 # Path to face cascade
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
 
 # Function to get coordinates
 def get_coords(p1):
@@ -104,3 +104,4 @@ while True:
 
 cv2.destroyAllWindows()
 cap.release()
+out.release()
